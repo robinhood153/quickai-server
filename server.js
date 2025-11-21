@@ -15,7 +15,7 @@ app.use(cors())
 app.use(express.json())
 app.use(clerkMiddleware())
 
-// dotenv.config()
+dotenv.config()
 
 app.get('/', (req, res)=>res.send('Server is Live!'))
 

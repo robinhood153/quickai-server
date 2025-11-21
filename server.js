@@ -21,6 +21,13 @@ app.get('/', (req, res)=>res.send('Server is Live!'))
 
 app.use(requireAuth())
 
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
+
 app.use('/api/ai', aiRouter)
 app.use('/api/user', userRouter)
 

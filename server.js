@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
+dotenv.config()
 import { clerkMiddleware, requireAuth } from '@clerk/express'
 import aiRouter from './routes/aiRoutes.js'
 import connectCloudinary from './config/cloudinary.js'
@@ -15,7 +16,7 @@ app.use(cors())
 app.use(express.json())
 app.use(clerkMiddleware())
 
-// dotenv.config()
+
 
 app.get('/', (req, res)=>res.send('Server is Live!'))
 

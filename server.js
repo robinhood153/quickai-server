@@ -1,40 +1,38 @@
-import express from 'express'
-import cors from 'cors'
-import 'dotenv/config'
-dotenv.config()
-import { clerkMiddleware, requireAuth } from '@clerk/express'
-import aiRouter from './routes/aiRoutes.js'
-import connectCloudinary from './config/cloudinary.js'
-import userRouter from './routes/userRoutes.js'
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
+import { clerkMiddleware, requireAuth } from "@clerk/express";
+import aiRouter from "./routes/aiRoutes.js";
+import connectCloudinary from "./config/cloudinary.js";
+import userRouter from "./routes/userRoutes.js";
 
-const app = express()
+const app = express();
 
-await connectCloudinary()
+// Connect Cloudinary
+await connectCloudinary();
 
-app.use(cors())
-app.use(express.json())
-app.use(clerkMiddleware())
-
-
-
-app.get('/', (req, res)=>res.send('Server is Live!'))
-
-app.use(requireAuth())
-
+// CORS must be before everything
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL, // Your Render frontend URL
     credentials: true,
   })
 );
 
-app.use('/api/ai', aiRouter)
-app.use('/api/user', userRouter)
+app.use(express.json());
+app.use(clerkMiddleware());
+
+// Test route
+app.get("/", (req, res) => res.send("Server is Live!"));
+
+// Protect only API routes
+app.use("/api/ai", requireAuth(), aiRouter);
+app.use("/api/user", requireAuth(), userRouter);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, ()=>{
-    console.log('Server is running in port', PORT);
-    
-})
+app.listen(PORT, () => {
+  console.log("Server is running in port", PORT);
+});
